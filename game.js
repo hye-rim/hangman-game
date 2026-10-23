@@ -1,4 +1,6 @@
 'use strict';
+// 오락실 튜토리얼이 '진짜로 일어난 일'을 알아채는 신호 (arcade/public/tutorial.js 가 듣는다. 튜토리얼이 아니면 아무도 안 듣는다)
+const tutorialSignal = (type) => window.dispatchEvent(new CustomEvent('arcade:tutorial', { detail: { type } }));
 
 // 행맨: 화면·입력·소리. 규칙과 단어는 logic.js (LOGIC_HANG)
 (() => {
@@ -121,6 +123,7 @@ function pick(ch) {
   if (!playing || st.state !== 'play') return;
   const r = L.guess(st, ch);
   if (!r) return;
+  tutorialSignal('guess');
   if (r.hit) { sfx.hit(r.hit); say(r.hit > 1 ? `${ch} ${r.hit}군데 열렸어요!` : `${ch} 맞았어요!`); } else { sfx.miss(); say(`${ch} — 이 글자는 없어요`); }
   afterGuess();
 }
